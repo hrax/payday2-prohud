@@ -1,0 +1,60 @@
+{
+	"name" : "ProHUD",
+	"description" : "Modified version of CustomHUD and other small useful mods",
+	"author" : "",
+	"contact" : "",
+	"version" : "1.0",
+	"persist_scripts" : [
+		{ "global" : "ProHUD", "script_path" : "ProHUDOptions.lua" }
+	],
+	"pre_hooks" : [
+	    { "hook_id" : "lib/managers/hudmanagerpd2", "script_path" : "ProHUDOptions.lua" },
+		{ "hook_id" : "lib/managers/hud/hudteammate", "script_path" : "ProHUDOptions.lua" },
+		{ "hook_id" : "lib/managers/hud/hudheisttimer", "script_path" : "ProHUDOptions.lua" }
+	],
+	"hooks" : [
+		/* Kick */
+		{ "hook_id": "lib/managers/menumanager", 						"script_path": "ProHUDKickLevel.lua" },
+		/* Kick end */
+
+		/* Roman Numerals */
+		{ "hook_id": "lib/managers/experiencemanager", 					"script_path": "ProHUDRomanNumerals.lua" },
+		/* Roman Numerals end */
+
+		/* Screen Skip */
+		{ "hook_id": "lib/managers/menu/stageendscreengui", 			"script_path": "ProHUDScreenSkip.lua" },
+		{ "hook_id": "lib/managers/menu/lootdropscreengui", 			"script_path": "ProHUDScreenSkip.lua" },
+		{ "hook_id": "lib/states/ingamewaitingforplayers", 				"script_path": "ProHUDScreenSkip.lua" },
+		{ "hook_id": "lib/states/missionendstate", 						"script_path": "ProHUDScreenSkip.lua" },
+		/* Screen Skip end */
+
+		/* Sticky Interaction */
+		{ "hook_id": "lib/units/beings/player/states/PlayerStandard", 	"script_path": "ProHUDStickyInteraction.lua"},
+		{ "hook_id": "lib/managers/hud/HUDInteraction", 				"script_path": "ProHUDStickyInteraction.lua" },
+		/* Sticky Interaction end */
+
+		/* Gadget State */
+		{ "hook_id": "lib/units/weapons/NewRaycastWeaponBase", 			"script_path": "ProHUDGadgetState.lua" },
+		/* Gadget State end */
+
+		/* Assaut Tape * /
+		{ "hook_id": "lib/managers/hud/hudassaultcorner", 				"script_path": "ProHUDAssaultTape.lua" },
+		/* Assaut Tape end */
+
+		/* Kill Counter */
+		{ "hook_id": "lib/managers/hud/hudteammate", 					"script_path": "ProHUDKillCounter.lua" },
+		{ "hook_id": "lib/managers/hudmanagerpd2", 						"script_path": "ProHUDKillCounter.lua" },
+		{ "hook_id": "lib/units/enemies/cop/copdamage", 				"script_path": "ProHUDKillCounter.lua" },
+		{ "hook_id": "lib/units/equipment/sentry_gun/sentrygunbase", 	"script_path": "ProHUDKillCounter.lua" },
+		/* Kill Counter end */
+
+		/* HUD */
+		{ "hook_id": "lib/managers/hudmanagerpd2", 						"script_path": "ProHUD.lua" },
+		{ "hook_id": "lib/managers/hud/hudteammate", 					"script_path": "ProHUD.lua" },
+		{ "hook_id": "lib/managers/hud/hudtemp", 						"script_path": "ProHUD.lua" },
+		{ "hook_id": "lib/managers/hud/hudobjectives", 					"script_path": "ProHUD.lua" },
+		{ "hook_id": "lib/managers/hud/hudheisttimer", 					"script_path": "ProHUD.lua" },
+		{ "hook_id": "lib/managers/hud/hudchat", 						"script_path": "ProHUD.lua" }
+		/* HUD end */
+	],
+}
