@@ -1,6 +1,6 @@
 if RequiredScript == "lib/managers/hudmanagerpd2" then
 	HUDManager.PROHUD = true --External flag
-	-- HUDManager._USE_KILL_COUNTER = HUDManager._USE_KILL_COUNTER or false    --Updated on kill counter plugin load
+	HUDManager._USE_KILL_COUNTER = HUDManager._USE_KILL_COUNTER or false    --Updated on kill counter plugin load
 
 	local update_original = HUDManager.update
 	local set_stamina_value_original = HUDManager.set_stamina_value
