@@ -224,7 +224,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			
 			-- Debug teammate
 			if self._main_player then
-				self._main_player = false
+				--self._main_player = false
 			end
 
 			self:load_options(true) -- force load options
@@ -307,7 +307,6 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		self:_create_latency_panel()
 		self:_create_kills_panel()
 		self:_create_interact_panel_new()
-
 	end
 
 	function HUDTeammate:_place_panels()
@@ -1496,6 +1495,16 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 					h = self._weapons_panel:h(),
 			})
 		   
+
+		   	local bg = self._interact_panel:rect({
+				name = "interact_panel_bg",
+				blend_mode = "normal",
+				color = Color.black,
+				alpha = self._bg_opacity,
+				h = self._interact_panel:h(),
+				w = self._interact_panel:w(),
+				layer = -1,
+			})
 			--HUDBGBox_create(self._interact_panel, {
 			--				w = self._interact_panel:w(),
 			--				h = self._interact_panel:h(),
@@ -2211,4 +2220,108 @@ elseif RequiredScript == "lib/managers/hud/hudheisttimer" then
 	        tweak_data.menu.pd2_small_font_size = tmp
 	end
 
+
+elseif RequiredScript == "lib/managers/hud/hudsuspicion" then
+	function HUDSuspicion:init(hud, sound_source)
+		log("SUSPITION!")
+		self._hud_panel = hud.panel
+		self._sound_source = sound_source
+		if self._hud_panel:child("suspicion_panel") then
+			self._hud_panel:remove(self._hud_panel:child("suspicion_panel"))
+		end
+		self._suspicion_panel = self._hud_panel:panel({
+			visible = false,
+			name = "suspicion_panel",
+			y = 0,
+			valign = "center",
+			layer = 1
+		})
+		self._misc_panel = self._suspicion_panel:panel({name = "misc_panel"})
+		self._suspicion_panel:set_size(100, 100)
+		self._suspicion_panel:set_center(self._suspicion_panel:parent():w() / 2, self._suspicion_panel:parent():h() / 2)
+		local scale = 1.175
+		local suspicion_left = self._suspicion_panel:bitmap({
+			name = "suspicion_left",
+			visible = true,
+			texture = "guis/textures/pd2/hud_stealthmeter",
+			color = Color(0, 1, 1),
+			alpha = 1,
+			valign = "center",
+			w = 128 / 2,
+			h = 128 / 2,
+			blend_mode = "add",
+			render_template = "VertexColorTexturedRadial",
+			layer = 1
+		})
+		suspicion_left:set_size(suspicion_left:w() * scale, suspicion_left:h() * scale)
+		suspicion_left:set_center_x(self._suspicion_panel:w() / 2)
+		suspicion_left:set_center_y(self._suspicion_panel:h() / 2)
+		local suspicion_right = self._suspicion_panel:bitmap({
+			name = "suspicion_right",
+			visible = true,
+			texture = "guis/textures/pd2/hud_stealthmeter",
+			color = Color(0, 1, 1),
+			alpha = 1,
+			valign = "center",
+			w = 128 / 2,
+			h = 128 / 2,
+			blend_mode = "add",
+			render_template = "VertexColorTexturedRadial",
+			layer = 1
+		})
+		suspicion_right:set_size(suspicion_right:w() * scale, suspicion_right:h() * scale)
+		suspicion_right:set_center(suspicion_left:center())
+		suspicion_left:set_texture_rect(128, 0, -128, 128)
+		local hud_stealthmeter_bg = self._misc_panel:bitmap({
+			name = "hud_stealthmeter_bg",
+			visible = true,
+			texture = "guis/textures/pd2/hud_stealthmeter_bg",
+			color = Color(0.2, 1, 1, 1),
+			alpha = 0,
+			valign = {0.5, 0},
+			w = 128 / 2,
+			h = 128 / 2,
+			blend_mode = "normal"
+		})
+		hud_stealthmeter_bg:set_size(hud_stealthmeter_bg:w() * scale, hud_stealthmeter_bg:h() * scale)
+		hud_stealthmeter_bg:set_center(suspicion_left:center())
+		local suspicion_detected = self._suspicion_panel:text({
+			name = "suspicion_detected",
+			text = managers.localization:to_upper_text("hud_detected"),
+			font_size = tweak_data.menu.pd2_medium_font_size,
+			font = tweak_data.menu.pd2_medium_font,
+			layer = 2,
+			align = "center",
+			vertical = "center",
+			alpha = 0
+		})
+		suspicion_detected:set_text(utf8.to_upper(managers.localization:text("hud_suspicion_detected")))
+		suspicion_detected:set_center(suspicion_left:center())
+		local hud_stealth_eye = self._misc_panel:bitmap({
+			name = "hud_stealth_eye",
+			visible = true,
+			texture = "guis/textures/pd2/hud_stealth_eye",
+			alpha = 0,
+			w = 32 / 2,
+			h = 32 / 2,
+			valign = "center",
+			blend_mode = "add",
+			layer = 1
+		})
+		hud_stealth_eye:set_center(suspicion_left:center_x(), suspicion_left:bottom() - 4)
+		local hud_stealth_exclam = self._misc_panel:bitmap({
+			name = "hud_stealth_exclam",
+			visible = true,
+			texture = "guis/textures/pd2/hud_stealth_exclam",
+			alpha = 0,
+			w = 32 / 2,
+			h = 32 / 2,
+			valign = "center",
+			blend_mode = "add",
+			layer = 1
+		})
+		hud_stealth_exclam:set_center(suspicion_left:center_x(), suspicion_left:top() - 4)
+		self._eye_animation = nil
+		self._suspicion_value = 0
+	end
 end
