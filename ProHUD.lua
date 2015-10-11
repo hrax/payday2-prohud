@@ -607,8 +607,8 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 					alpha = 1
 				})
 
-				firemode_single:set_w(weapon_selection_panel:h() * 0.65)
-				firemode_single:set_h(weapon_selection_panel:h() * 0.65)
+				firemode_single:set_w((weapon_selection_panel:h() * 0.6))
+				firemode_single:set_h((weapon_selection_panel:h() * 0.6))
 
 				firemode_single:set_left(0)
 				firemode_single:set_bottom(weapon_selection_panel:h() - self._inner_spacer)
@@ -617,7 +617,8 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				firemode_auto:set_w(weapon_selection_panel:h() * 0.65)
 				firemode_auto:set_h(weapon_selection_panel:h() * 0.65)
 
-				firemode_auto:set_right((self._inner_spacer * 2) + firemode_single:w())
+				firemode_auto:set_right(weapon_selection_panel:w())
+				firemode_auto:set_bottom(weapon_selection_panel:h() - self._inner_spacer)
 
 
 			end
