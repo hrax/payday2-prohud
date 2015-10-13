@@ -29,10 +29,6 @@
 		{ "hook_id": "lib/managers/hud/HUDInteraction", 				"script_path": "ProHUDStickyInteraction.lua" },
 		/* Sticky Interaction end */
 
-		/* Gadget State */
-		{ "hook_id": "lib/units/weapons/NewRaycastWeaponBase", 			"script_path": "ProHUDGadgetState.lua" },
-		/* Gadget State end */
-
 		/* Assaut Tape * /
 		{ "hook_id": "lib/managers/hud/hudassaultcorner", 				"script_path": "ProHUDAssaultTape.lua" },
 		/* Assaut Tape end */

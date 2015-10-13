@@ -1,3 +1,5 @@
+if not ProHUD then dofile( ModPath .. "static.lua") end
+
 if RequiredScript == "lib/managers/hudmanagerpd2" then
 	HUDManager.PROHUD = true --External flag
 	HUDManager._USE_KILL_COUNTER = HUDManager._USE_KILL_COUNTER or false    --Updated on kill counter plugin load
@@ -255,7 +257,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 
 		self._name_panel_h = 15
 		self._special_equipment_panel_h = 20
-		self._carry_panel_h = self._name_panel_h
+		self._carry_panel_h = 20
 
 		-- Totals...
 		self._max_w = self._health_panel_w + self._inner_spacer + self._weapons_panel_w + self._outer_spacer + self._equipment_panel_w

@@ -1,6 +1,3 @@
-
-ProHUDOptions = ProHUDOptions or class()
-
 --[[
     ProHUD Configuration
 ]]--
