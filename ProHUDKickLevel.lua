@@ -1,3 +1,5 @@
+if not ProHUD then dofile( ModPath .. "static.lua") end
+
 --[[
 	Show level in kick menu
 ]]--

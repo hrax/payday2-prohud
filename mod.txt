@@ -7,11 +7,6 @@
 	"persist_scripts" : [
 		{ "global" : "ProHUD", "script_path" : "ProHUDOptions.lua" }
 	],
-	"pre_hooks" : [
-	    { "hook_id" : "lib/managers/hudmanagerpd2", "script_path" : "ProHUDOptions.lua" },
-		{ "hook_id" : "lib/managers/hud/hudteammate", "script_path" : "ProHUDOptions.lua" },
-		{ "hook_id" : "lib/managers/hud/hudheisttimer", "script_path" : "ProHUDOptions.lua" }
-	],
 	"hooks" : [
 		/* Kick */
 		{ "hook_id": "lib/managers/menumanager", 						"script_path": "ProHUDKickLevel.lua" },
