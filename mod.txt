@@ -3,7 +3,7 @@
 	"description" : "Modified version of CustomHUD and other small useful mods",
 	"author" : "",
 	"contact" : "",
-	"version" : "1.0",
+	"version" : "0.2a",
 	"persist_scripts" : [
 		{ "global" : "ProHUD", "script_path" : "ProHUDOptions.lua" }
 	],
