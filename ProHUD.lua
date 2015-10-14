@@ -239,7 +239,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 
 	function HUDTeammate:load_options( force )
 		self._scale = self._main_player and 1 or 0.8
-		self._opacity = self._main_player and 1 or 0.6 -- TODO: different opacity for teammate
+		self._opacity = self._main_player and 1 or 0.6
 		self._bg_opacity = self._opacity * 0.3
 
 		-- configure some of the panel properties here
@@ -249,7 +249,12 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		self._health_panel_w = 64 * self._scale
 		self._health_panel_h = 64 * self._scale
 
-		self._weapons_panel_w = ((self._main_player and 190 or 150) * self._scale) + self._outer_spacer -- one spacer in this panel...
+		-- todo: separate weapons_panel into 2 widths; weapon icon + ammo + ammo
+		self._weapons_panel_icon_w = 100 * self._scale
+		self._weapons_panel_clip_w = self._main_player and 40 or 0 * self._scale
+		self._weapons_panel_ammo_w = self._main_player and 30 or 35 * self._scale
+
+		self._weapons_panel_w = self._weapons_panel_icon_w + self._weapons_panel_ammo_w + self._weapons_panel_clip_w + self._outer_spacer -- one spacer in this panel...
 		self._weapons_panel_h = self._health_panel_h
 
 		self._equipment_panel_w = 50 * self._scale
@@ -257,7 +262,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 
 		self._name_panel_h = 15
 		self._special_equipment_panel_h = 20
-		self._carry_panel_h = 20
+		self._carry_panel_h = 22
 
 		-- Totals...
 		self._max_w = self._health_panel_w + self._inner_spacer + self._weapons_panel_w + self._outer_spacer + self._equipment_panel_w
@@ -487,11 +492,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			local teammate = self._main_player and false or true
 
 			local in_spacer = (self._main_player and self._inner_spacer or self._outer_spacer)
-			local w_spaced = panel:w() - self._outer_spacer;
 			local h_spaced = panel:h() - (in_spacer * 2)
-
-			local part = w_spaced * 0.25
-			local total_part = part * 0.60
 
 			local weapon_bg = panel:rect({
 				name = "weapon_bg",
@@ -499,20 +500,31 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				color = Color.black,
 				alpha = self._bg_opacity,
 				h = panel:h(),
-				w = (part * 3) + (part - total_part),
+				w = self._weapons_panel_icon_w,
 				layer = -1,
 			})
 
-			local total_bg = panel:rect({
-				name = "total_bg",
+			local mag_bg = panel:rect({
+				name = "mag_bg",
 				blend_mode = "normal",
 				color = Color.black,
 				alpha = self._bg_opacity,
 				h = panel:h(),
-				w = total_part + (equipped and 0 or self._outer_spacer),
+				w = self._weapons_panel_clip_w + (equipped and 0 or self._outer_spacer),
 				layer = -1,
 			})
-			total_bg:set_left(weapon_bg:right() + (equipped and self._outer_spacer or 0))
+			mag_bg:set_left(weapon_bg:right())
+
+			local ammo_bg = panel:rect({
+				name = "ammo_bg",
+				blend_mode = "normal",
+				color = Color.black,
+				alpha = self._bg_opacity,
+				h = panel:h(),
+				w = self._weapons_panel_ammo_w,
+				layer = -1,
+			})
+			ammo_bg:set_left(mag_bg:right() + (equipped and self._outer_spacer or 0))
 				   
 			local icon = panel:bitmap({
 				name = "icon",
@@ -541,6 +553,9 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				   
 			--local ammo_text_width = (panel:h() - icon:w()) * (self._main_player and 0.65 or 1)
 			local ammo_text_width = h_spaced
+			if h_spaced > self._weapons_panel_ammo_w and not equipped then
+				ammo_text_width = self._weapons_panel_ammo_w - (in_spacer * 2)
+			end
 				   
 			local ammo_clip = panel:text({
 				name = "ammo_clip",
@@ -548,17 +563,17 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				color = Color.white,
 				blend_mode = "normal",
 				layer = 1,
-				w = panel:h(),
+				w = ammo_text_width, --self._weapons_panel_ammo_w,
 				h = ammo_text_width,
 				vertical = "center",
 				align = "right",
 				valign = "center",
-				font_size = ammo_text_width * 1,
+				font_size = ammo_text_width * 0.9,
 				font = tweak_data.hud_players.ammo_font,
 				visible = self._main_player
 			})
-			ammo_clip:set_top(weapon_bg:top() + self._inner_spacer)
-			ammo_clip:set_right(weapon_bg:right() - self._inner_spacer)
+			ammo_clip:set_top(mag_bg:top() + self._inner_spacer)
+			ammo_clip:set_right(mag_bg:right() - self._inner_spacer)
 				   
 			local ammo_total = panel:text({
 				name = "ammo_total",
@@ -566,30 +581,31 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				color = Color.white,
 				blend_mode = "normal",
 				layer = 1,
-				w = self._main_player and total_bg:w() or part,
+				w = self._weapons_panel_ammo_w,
 				h = equipped and (h_spaced * 0.50) or h_spaced,
-				vertical = "top",
+				vertical = "center",
+				valign = "center",
 				align = self._main_player and "left" or "right",
 				font_size = equipped and (h_spaced * 0.60) or h_spaced,
 				font = tweak_data.hud_players.ammo_font
 			})
-			ammo_total:set_top(weapon_bg:top() + in_spacer)
+			ammo_total:set_top(ammo_bg:top() + in_spacer)
 			if self._main_player then 
-				ammo_total:set_left(total_bg:left() + self._inner_spacer)
+				ammo_total:set_left(ammo_bg:left() + self._inner_spacer)
 			else 
-				ammo_total:set_right(total_bg:right() - self._inner_spacer)
+				ammo_total:set_right(ammo_bg:right() - self._inner_spacer)
 			end
 
 			if self._main_player then
 				local weapon_selection_panel = panel:panel({
 					name = "weapon_selection",
-					w = total_bg:w() - 10,
+					w = ammo_bg:w() - 10,
 					h = (panel:h() - 10) * 0.5,
 					layer = 5,
 					visible = equipped,
 				})
-			   weapon_selection_panel:set_bottom(total_bg:bottom())
-			   weapon_selection_panel:set_left(total_bg:left() + 5)
+			   weapon_selection_panel:set_bottom(ammo_bg:bottom())
+			   weapon_selection_panel:set_left(ammo_bg:left() + 5)
 
 				local firemode_single = weapon_selection_panel:bitmap({
 					name = "firemode_single",
@@ -616,8 +632,8 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				firemode_single:set_bottom(weapon_selection_panel:h() - self._inner_spacer)
 
 				
-				firemode_auto:set_w(weapon_selection_panel:h() * 0.65)
-				firemode_auto:set_h(weapon_selection_panel:h() * 0.65)
+				firemode_auto:set_w(weapon_selection_panel:h() * 0.6)
+				firemode_auto:set_h(weapon_selection_panel:h() * 0.6)
 
 				firemode_auto:set_right(weapon_selection_panel:w())
 				firemode_auto:set_bottom(weapon_selection_panel:h() - self._inner_spacer)

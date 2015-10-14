@@ -1,7 +1,8 @@
+
 --[[
     ProHUD Configuration
 ]]--
-ProHUD = ProHUD or class()
+_G.ProHUD = _G.ProHUD or {};
 
 --[[
     ProHUD Utility functions
@@ -15,6 +16,7 @@ function ProHUD:peerRankName(peer)
     return peer:name() .. " (" ..  rank .. (peer:level() or '?') .. ")"
 end
 
+-- debug methods
 function ProHUD:debugPanel(panel, color)
     panel:rect({      --TEMPORARY
         blend_mode = "normal",
