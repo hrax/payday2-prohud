@@ -24,7 +24,7 @@ elseif RequiredScript == "lib/managers/menu/lootdropscreengui" then
 	function LootDropScreenGui:update(t, ...)
 		ProHUDLootDropScreenGui_update(self, t, ...)
 
-		if not self._card_chosen and ProHUD_SCREEN_SKIP_AUTO_CARD > 0 then
+		if not self._card_chosen and ProHUD_SCREEN_SKIP_AUTO_CARD >= 0 then
 			self:_set_selected_and_sync(math.random(3))
 			self:confirm_pressed()
 		end
