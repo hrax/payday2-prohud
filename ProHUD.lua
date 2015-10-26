@@ -140,6 +140,10 @@ if RequiredScript == "lib/managers/hudmanagerpd2" then
 			return self._teammate_panels[i]:get_carry_panel_info()
 	end
 
+	function HUDManager:reposition_objective()
+		self._hud_objectives:reposition_objective()
+	end
+
 elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		HUDTeammate._NAME_ANIMATE_SPEED = 90
 	HUDTeammate._INTERACTION_TEXTS = {
@@ -1351,7 +1355,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:get_carry_panel_info()
-			return self._carry_panel:w(), self._carry_panel:h(), self._panel:right() - self._carry_panel:x(), self._parent:y() + self._carry_panel:y()
+			return self._carry_panel:w(), self._carry_panel:h(), self._parent:w() - self._carry_panel:w(), (self._parent:h() - self._panel:h() - (self._carry_panel:h() * 2))
 	end
 
 	function HUDTeammate:_create_kills_panel(width, height, scale)
@@ -2124,6 +2128,11 @@ elseif RequiredScript == "lib/managers/hud/hudobjectives" then
                 local _, _, w, _ = obj:text_rect()
                 return w
         end    
+
+        function HUDObjectives:reposition_objective()
+        	self._panel:set_x(90)
+        end
+
        
 elseif RequiredScript == "lib/managers/hud/hudheisttimer" then
        
@@ -2144,7 +2153,7 @@ elseif RequiredScript == "lib/managers/hud/hudheisttimer" then
             })
             self._timer_text = self._heist_timer_panel:text({
                     name = "timer_text",
-                    text = "00:00",
+                    text = "00:00:00",
                     font_size = 28,
                     font = tweak_data.hud.medium_font_noshadow,
                     color = Color.white,
@@ -2156,7 +2165,17 @@ elseif RequiredScript == "lib/managers/hud/hudheisttimer" then
             })
             self._last_time = 0
     end
- 
+
+local origi_tim = HUDHeistTimer.set_time
+function HUDHeistTimer:set_time(time)
+	if math.floor(time / 3600) > 0 and self._heist_timer_panel:w() == 50 then
+		self._heist_timer_panel:set_w(80)
+		self._timer_text:set_w(80)
+		managers.hud:reposition_objective()
+	end
+
+	origi_tim(self, time)
+end
 
 	HUDChat.line_height = 16
 	local HUDChat_receive_message_original = HUDChat.receive_message
