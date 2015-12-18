@@ -5,7 +5,7 @@ This mod was build for purely educational purposes and fun.
 All source code except few bug fix modifications was written by these people (will be updated):
 
 * seven: CustomHUD, Kill Counter, Gadget State, Screen Skip
-* PocoHUD: Sticky Interaction, Kick Level
+* PocoHUD: Sticky Interaction, Kick Level, Desync
 * Restoration Mod: Assault Tape
 
 ## License
