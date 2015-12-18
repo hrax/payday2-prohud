@@ -301,6 +301,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		if not self._main_player then
 			self._panel:set_halign("left")
 		end
+		self._player_panel = self._panel:panel({name = "player"})
 	end
 
 	function HUDTeammate:_create_panels()
@@ -321,7 +322,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:_place_panels()
-		local panel = self._panel
+		local panel = self._player_panel
 
 		--[[
 			Place panels
@@ -405,7 +406,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:_create_health_panel()
-		self._health_panel = self._panel:panel({
+		self._health_panel = self._player_panel:panel({
 				name = "radial_health_panel",
 				h = self._health_panel_h,
 				w = self._health_panel_w,
@@ -488,6 +489,43 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				font_size = self._health_panel:h() * 0.5,
 				font = tweak_data.hud_players.timer_font
 		})
+
+		local radial_rip = self._health_panel:bitmap({
+			name = "radial_rip",
+			texture = "guis/textures/pd2/hud_rip",
+			texture_rect = {
+				64,
+				0,
+				-64,
+				64
+			},
+			render_template = "VertexColorTexturedRadial",
+			blend_mode = "add",
+			alpha = 1,
+			w = self._health_panel:w(),
+			h = self._health_panel:h(),
+			layer = 3
+		})
+		radial_rip:set_color(Color(1, 0, 0, 0))
+		radial_rip:hide()
+		local radial_rip_bg = self._health_panel:bitmap({
+			name = "radial_rip_bg",
+			texture = "guis/textures/pd2/hud_rip_bg",
+			texture_rect = {
+				64,
+				0,
+				-64,
+				64
+			},
+			render_template = "VertexColorTexturedRadial",
+			blend_mode = "normal",
+			alpha = 1,
+			w = self._health_panel:w(),
+			h = self._health_panel:h(),
+			layer = 1
+		})
+		radial_rip_bg:set_color(Color(1, 0, 0, 0))
+		radial_rip_bg:hide()
 	end
 
 	function HUDTeammate:_create_weapons_panel()
@@ -649,7 +687,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		local w = self._weapons_panel_w
 		local h = self._weapons_panel_h
 		   
-		self._weapons_panel = self._panel:panel({
+		self._weapons_panel = self._player_panel:panel({
 			name = "weapons_panel",
 			h = h,
 			w = w,
@@ -703,7 +741,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		local width = self._equipment_panel_w
 		local height = self._equipment_panel_h
 		   
-		self._equipment_panel = self._panel:panel({
+		self._equipment_panel = self._player_panel:panel({
 			name = "equipment_panel",
 			h = height,
 			w = width,
@@ -769,7 +807,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		local width = self:w()
 		local height = self._name_panel_h
 	   
-		self._name_panel = self._panel:panel({
+		self._name_panel = self._player_panel:panel({
 				name = "name_panel",
 				h = height,
 				w = width,
@@ -816,7 +854,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 		local width = self._main_player and self:w() or self._health_panel_w
 		local height = self._main_player and self._special_equipment_panel_h or self._health_panel_h
 
-		self._special_equipment_panel = self._panel:panel({
+		self._special_equipment_panel = self._player_panel:panel({
 				name = "special_equipment_panel",
 				h = height,
 				w = width,
@@ -894,14 +932,14 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:stop_timer()
-			if alive(self._panel) then
+			if alive(self._player_panel) then
 					self._condition_timer:set_visible(false)
 					self._condition_timer:stop()
 			end
 	end
 
 	function HUDTeammate:set_pause_timer(pause)
-			if not alive(self._panel) then
+			if not alive(self._player_panel) then
 					return
 			end
 			--self._condition_timer:set_visible(false)
@@ -917,7 +955,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			width = width * scale
 			height = height * scale
 
-			self._stamina_panel = self._panel:panel({
+			self._stamina_panel = self._player_panel:panel({
 					name = "stamina_panel",
 					h = height,
 					w = width,
@@ -1293,7 +1331,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			local width = self:w()
 			local height = self._carry_panel_h
 		   
-			self._carry_panel = self._panel:panel({
+			self._carry_panel = self._player_panel:panel({
 					name = "carry_panel",
 					visible = false,
 					h = height,
@@ -1355,7 +1393,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:get_carry_panel_info()
-			return self._carry_panel:w(), self._carry_panel:h(), self._parent:w() - self._carry_panel:w(), (self._parent:h() - self._panel:h() - (self._carry_panel:h() * 2))
+			return self._carry_panel:w(), self._carry_panel:h(), self._parent:w() - self._carry_panel:w(), (self._parent:h() - self._player_panel:h() - (self._carry_panel:h() * 2))
 	end
 
 	function HUDTeammate:_create_kills_panel(width, height, scale)
@@ -1480,7 +1518,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			local width = 35 * scale
 			local height = 25 * scale
 		   
-			self._latency_panel = self._panel:panel({
+			self._latency_panel = self._player_panel:panel({
 					name = "latency_panel",
 					h = height,
 					w = width,
@@ -1510,7 +1548,7 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 	end
 
 	function HUDTeammate:_create_interact_panel_new()
-			self._interact_panel = self._panel:panel({
+			self._interact_panel = self._player_panel:panel({
 					name = "interact_panel",
 					layer = 0,
 					visible = false,
