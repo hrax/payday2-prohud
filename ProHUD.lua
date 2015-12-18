@@ -9,6 +9,25 @@ if RequiredScript == "lib/managers/hudmanagerpd2" then
 	local set_max_stamina_original = HUDManager.set_max_stamina
 	local add_weapon_original = HUDManager.add_weapon
 
+	function HUDManager:hide_player_gear(panel_id)
+		if self._teammate_panels[panel_id] and self._teammate_panels[panel_id]:panel() and self._teammate_panels[panel_id]:panel():child("player") then
+			local player_panel = self._teammate_panels[panel_id]:panel():child("player")
+			player_panel:child("weapons_panel"):set_visible(false)
+			player_panel:child("equipment_panel"):child("deployable_equipment_panel"):set_visible(false)
+			player_panel:child("equipment_panel"):child("cable_ties_panel"):set_visible(false)
+			player_panel:child("equipment_panel"):child("grenades_panel"):set_visible(false)
+		end
+	end
+	function HUDManager:show_player_gear(panel_id)
+		if self._teammate_panels[panel_id] and self._teammate_panels[panel_id]:panel() and self._teammate_panels[panel_id]:panel():child("player") then
+			local player_panel = self._teammate_panels[panel_id]:panel():child("player")
+			player_panel:child("weapons_panel"):set_visible(true)
+			player_panel:child("equipment_panel"):child("deployable_equipment_panel"):set_visible(true)
+			player_panel:child("equipment_panel"):child("cable_ties_panel"):set_visible(true)
+			player_panel:child("equipment_panel"):child("grenades_panel"):set_visible(true)
+		end
+	end
+
 	function HUDManager:_create_teammates_panel(hud)
 		local hud = hud or managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2)
 		self._hud.teammate_panels_data = self._hud.teammate_panels_data or {}
@@ -490,42 +509,44 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 				font = tweak_data.hud_players.timer_font
 		})
 
-		local radial_rip = self._health_panel:bitmap({
-			name = "radial_rip",
-			texture = "guis/textures/pd2/hud_rip",
-			texture_rect = {
-				64,
-				0,
-				-64,
-				64
-			},
-			render_template = "VertexColorTexturedRadial",
-			blend_mode = "add",
-			alpha = 1,
-			w = self._health_panel:w(),
-			h = self._health_panel:h(),
-			layer = 3
-		})
-		radial_rip:set_color(Color(1, 0, 0, 0))
-		radial_rip:hide()
-		local radial_rip_bg = self._health_panel:bitmap({
-			name = "radial_rip_bg",
-			texture = "guis/textures/pd2/hud_rip_bg",
-			texture_rect = {
-				64,
-				0,
-				-64,
-				64
-			},
-			render_template = "VertexColorTexturedRadial",
-			blend_mode = "normal",
-			alpha = 1,
-			w = self._health_panel:w(),
-			h = self._health_panel:h(),
-			layer = 1
-		})
-		radial_rip_bg:set_color(Color(1, 0, 0, 0))
-		radial_rip_bg:hide()
+		if self._main_player then
+			local radial_rip = self._health_panel:bitmap({
+				name = "radial_rip",
+				texture = "guis/textures/pd2/hud_rip",
+				texture_rect = {
+					64,
+					0,
+					-64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "add",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 3
+			})
+			radial_rip:set_color(Color(1, 0, 0, 0))
+			radial_rip:hide()
+			local radial_rip_bg = self._health_panel:bitmap({
+				name = "radial_rip_bg",
+				texture = "guis/textures/pd2/hud_rip_bg",
+				texture_rect = {
+					64,
+					0,
+					-64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "normal",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 1
+			})
+			radial_rip_bg:set_color(Color(1, 0, 0, 0))
+			radial_rip_bg:hide()
+		end
 	end
 
 	function HUDTeammate:_create_weapons_panel()
