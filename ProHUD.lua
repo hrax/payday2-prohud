@@ -547,6 +547,79 @@ elseif RequiredScript == "lib/managers/hud/hudteammate" then
 			radial_rip_bg:set_color(Color(1, 0, 0, 0))
 			radial_rip_bg:hide()
 		end
+			local radial_absorb_shield_active = self._health_panel:bitmap({
+				name = "radial_absorb_shield_active",
+				texture = "guis/dlcs/coco/textures/pd2/hud_absorb_shield",
+				texture_rect = {
+					0,
+					0,
+					64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "normal",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 5
+			})
+			radial_absorb_shield_active:set_color(Color(1, 0, 0, 0))
+			radial_absorb_shield_active:hide()
+			local radial_absorb_health_active = self._health_panel:bitmap({
+				name = "radial_absorb_health_active",
+				texture = "guis/dlcs/coco/textures/pd2/hud_absorb_health",
+				texture_rect = {
+					0,
+					0,
+					64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "normal",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 5
+			})
+			radial_absorb_health_active:set_color(Color(1, 0, 0, 0))
+			radial_absorb_health_active:hide()
+			radial_absorb_health_active:animate(callback(self, self, "animate_update_absorb_active"))
+			local radial_info_meter = self._health_panel:bitmap({
+				name = "radial_info_meter",
+				texture = "guis/dlcs/coco/textures/pd2/hud_absorb_stack_fg",
+				texture_rect = {
+					0,
+					0,
+					64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "add",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 3
+			})
+			radial_info_meter:set_color(Color(1, 0, 0, 0))
+			radial_info_meter:hide()
+			local radial_info_meter_bg = self._health_panel:bitmap({
+				name = "radial_info_meter_bg",
+				texture = "guis/dlcs/coco/textures/pd2/hud_absorb_stack_bg",
+				texture_rect = {
+					64,
+					0,
+					-64,
+					64
+				},
+				render_template = "VertexColorTexturedRadial",
+				blend_mode = "normal",
+				alpha = 1,
+				w = self._health_panel:w(),
+				h = self._health_panel:h(),
+				layer = 1
+			})
+			radial_info_meter_bg:set_color(Color(1, 0, 0, 0))
+			radial_info_meter_bg:hide()
 	end
 
 	function HUDTeammate:_create_weapons_panel()
@@ -2320,7 +2393,6 @@ end
 
 elseif RequiredScript == "lib/managers/hud/hudsuspicion" then
 	function HUDSuspicion:init(hud, sound_source)
-		log("SUSPITION!")
 		self._hud_panel = hud.panel
 		self._sound_source = sound_source
 		if self._hud_panel:child("suspicion_panel") then
